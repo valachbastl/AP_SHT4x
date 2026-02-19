@@ -75,6 +75,9 @@ esp_err_t AP_SHT4x::readSerial(uint32_t &serial)
 
 esp_err_t AP_SHT4x::_readRaw(uint8_t cmd, uint16_t delayMs, float &temperature, float &humidity)
 {
+    temperature = -127.0f;
+    humidity    = -127.0f;
+
     esp_err_t ret = i2c_master_transmit(_dev, &cmd, 1, 100);
     if (ret != ESP_OK) return ret;
 

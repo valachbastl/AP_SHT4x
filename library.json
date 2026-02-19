@@ -1,7 +1,7 @@
 {
     "name": "AP_SHT4x",
-    "version": "1.0.0",
-    "releaseDate": "2026-02-16",
+    "version": "1.0.1",
+    "releaseDate": "2026-02-19",
     "description": "SHT4x (SHT40/SHT41/SHT45) temperature and humidity sensor driver for ESP-IDF new I2C master API",
     "keywords": ["sht4x", "sht40", "sht41", "sht45", "temperature", "humidity", "i2c", "esp-idf", "esp32"],
     "authors": [

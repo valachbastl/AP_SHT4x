@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.1] - 2026-02-19
+
+### Fixed
+- `read()`, `readWithHeater()`: pri chybe I2C nebo CRC jsou nyni `temperature` a `humidity` nastaveny na -127.0f (drive byly neinicializovane)
+
 ## [1.0.0] - 2026-02-16
 
 ### Added
