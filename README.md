@@ -25,7 +25,7 @@ Or with specific version:
 
 ```ini
 lib_deps =
-    https://github.com/valachbastl/AP_SHT4x.git#v1.0.0
+    https://github.com/valachbastl/AP_SHT4x.git#v1.0.1
 ```
 
 ## Usage
