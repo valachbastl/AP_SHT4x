@@ -6,7 +6,8 @@ SHT4x (SHT40/SHT41/SHT45) temperature and humidity sensor driver for ESP-IDF new
 
 - High/medium/low precision measurement
 - Heater control (6 modes: 3 intensities x 2 durations)
-- Self-test with heater (validates sensor responsiveness)
+- Self-test with heater (validates sensor responsiveness by temperature rise)
+- Sentinel values: `-126.0f` = sensor not found, `-127.0f` = read error
 - Soft reset and serial number readout
 - CRC-8 validation on all responses
 
@@ -25,7 +26,7 @@ Or with specific version:
 
 ```ini
 lib_deps =
-    https://github.com/valachbastl/AP_SHT4x.git#v1.0.1
+    https://github.com/valachbastl/AP_SHT4x.git#v1.0.2
 ```
 
 ## Usage
@@ -70,7 +71,7 @@ Compares last known temperature with measurement after heater pulse. If the temp
 
 ```cpp
 float tempDiff;
-esp_err_t ret = sht.selfTest(lastTemp, lastHum, tempDiff);
+esp_err_t ret = sht.selfTest(lastTemp, tempDiff);
 if (ret == ESP_OK) {
     printf("Sensor OK (dT: %.1f °C)\n", tempDiff);
 } else if (ret == ESP_ERR_INVALID_RESPONSE) {
@@ -96,9 +97,16 @@ sht.readSerial(serial);
 | `AP_SHT4x(bus, address)` | Constructor (address 0x44 default for SHT4x) |
 | `read(temp, hum)` | High precision measurement (~10 ms) |
 | `readWithHeater(cmd, temp, hum)` | Measurement with heater pulse |
-| `selfTest(tempBefore, humBefore, tempDiff, minTempDiff)` | Heater self-test (minTempDiff default 2.0 °C) |
+| `selfTest(tempBefore, tempDiff, minTempDiff)` | Heater self-test (minTempDiff default 2.0 °C) |
 | `reset()` | Soft reset (~1 ms) |
 | `readSerial(serial)` | Read 32-bit serial number |
+
+## Sentinel Values
+
+| Value | Meaning |
+|-------|---------|
+| `-126.0f` (`NO_SENSOR_TEMP`) | Sensor not found at I2C address |
+| `-127.0f` (`INVALID_TEMP`) | I2C read or CRC error |
 
 ## Author
 
