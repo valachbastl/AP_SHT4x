@@ -25,7 +25,7 @@ esp_err_t AP_SHT4x::readWithHeater(uint8_t cmd, float &temperature, float &humid
     return _readRaw(cmd, delayMs, temperature, humidity);
 }
 
-esp_err_t AP_SHT4x::selfTest(float tempBefore, float humBefore, float &tempDiff, float minTempDiff)
+esp_err_t AP_SHT4x::selfTest(float tempBefore, float &tempDiff, float minTempDiff)
 {
     // Mereni s heaterem (medium heat, 100 ms)
     float tempAfter, humAfter;
@@ -75,11 +75,17 @@ esp_err_t AP_SHT4x::readSerial(uint32_t &serial)
 
 esp_err_t AP_SHT4x::_readRaw(uint8_t cmd, uint16_t delayMs, float &temperature, float &humidity)
 {
-    temperature = -127.0f;
-    humidity    = -127.0f;
+    temperature = INVALID_TEMP;
+    humidity    = INVALID_TEMP;
 
     esp_err_t ret = i2c_master_transmit(_dev, &cmd, 1, 100);
-    if (ret != ESP_OK) return ret;
+    if (ret != ESP_OK) {
+        if (ret == ESP_ERR_NOT_FOUND || ret == ESP_ERR_TIMEOUT || ret == ESP_ERR_INVALID_STATE) {
+            temperature = NO_SENSOR_TEMP;
+            humidity    = NO_SENSOR_TEMP;
+        }
+        return ret;
+    }
 
     vTaskDelay(pdMS_TO_TICKS(delayMs));
 

@@ -22,6 +22,9 @@
 class AP_SHT4x
 {
 public:
+    static constexpr float NO_SENSOR_TEMP = -126.0f;  // senzor nenalezen na adrese (nepripojeno)
+    static constexpr float INVALID_TEMP   = -127.0f;  // senzor nalezen, ale cteni selhalo
+
     /**
      * @brief Konstruktor
      * @param bus I2C master bus handle (z i2c_new_master_bus)
@@ -47,14 +50,13 @@ public:
     esp_err_t readWithHeater(uint8_t cmd, float &temperature, float &humidity);
 
     /**
-     * @brief Self-test: porovna posledni zname hodnoty s merenim po ohrevu
+     * @brief Self-test: zaheje senzor a overi ze teplota vzrostla
      * @param tempBefore Posledni znama teplota pred ohrevem [°C]
-     * @param humBefore Posledni znama vlhkost pred ohrevem [%]
      * @param tempDiff Vystupni rozdil teplot (po ohrevu - pred) [°C]
      * @param minTempDiff Minimalni ocekavany rozdil teplot [°C] (vychozi 2.0)
      * @return ESP_OK = senzor OK, ESP_ERR_INVALID_RESPONSE = senzor nereaguje na ohrev
      */
-    esp_err_t selfTest(float tempBefore, float humBefore, float &tempDiff, float minTempDiff = 2.0f);
+    esp_err_t selfTest(float tempBefore, float &tempDiff, float minTempDiff = 2.0f);
 
     /**
      * @brief Provede soft reset senzoru (~1 ms)
